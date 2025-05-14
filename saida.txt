@@ -1,0 +1,23 @@
+size 1500 seed 1 breaks 758
+iter 0
+mps mps 2 cost 0.000000000 cmp 563007 move 564507 calls 1
+mps mps 301 cost 0.000000000 cmp 561507 move 563007 calls 1
+mps mps 600 cost 0.000000000 cmp 561507 move 563007 calls 1
+mps mps 899 cost 0.000000000 cmp 561507 move 563007 calls 1
+mps mps 1198 cost 0.000000000 cmp 561507 move 563007 calls 1
+mps mps 1497 cost 0.000000000 cmp 561507 move 563007 calls 1
+nummps 6 limParticao 2 mpsdiff 0.000000
+iter 0
+qs lq mps 1 cost 0.000000000 cmp 13798 move 2191 calls 1278
+in lq mps 1 cost 0.000000000 cmp 2736 move 4235 calls 1
+qs lq mps 150 cost 0.000000000 cmp 14177 move 3508 calls 1216
+in lq mps 150 cost 0.000000000 cmp 139041 move 140540 calls 1
+qs lq mps 299 cost 0.000000000 cmp 15675 move 4658 calls 1178
+in lq mps 299 cost 0.000000000 cmp 224890 move 226389 calls 1
+qs lq mps 448 cost 0.000000000 cmp 15589 move 5929 calls 1192
+in lq mps 448 cost 0.000000000 cmp 306428 move 307927 calls 1
+qs lq mps 597 cost 0.000000000 cmp 15377 move 6740 calls 1188
+in lq mps 597 cost 0.000000000 cmp 365258 move 366757 calls 1
+qs lq mps 746 cost 0.000000000 cmp 15676 move 7529 calls 1201
+in lq mps 746 cost 0.000000000 cmp 406697 move 408196 calls 1
+numlq 6 limQuebras 746 lqdiff 0.000000
