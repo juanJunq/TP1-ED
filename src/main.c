@@ -9,13 +9,13 @@
 int main()
 {
     int seed, size;
-    float minCost, a, b, c;
+    double minCost, a, b, c;
 
     scanf("%d", &seed);
-    scanf("%f", &minCost);
-    scanf("%f", &a);
-    scanf("%f", &b);
-    scanf("%f", &c); 
+    scanf("%lf", &minCost);
+    scanf("%lf", &a);
+    scanf("%lf", &b);
+    scanf("%lf", &c); 
     scanf("%d", &size);
 
     int* v = (int*)malloc(size * sizeof(int));

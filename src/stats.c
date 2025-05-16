@@ -8,7 +8,7 @@ void initStats(Stats* s)
     s->moves = 0;
 }
 
-float algCost(float a, float b, float c, Stats* count)
+double algCost(double a, double b, double c, Stats* count)
 {
     return ((a * count->cmp) + (b * count->moves) + (c * count->calls)); 
 }
@@ -24,10 +24,10 @@ int determineBreaks(int* v, int size)
     return breaks;
 }
 
-int findPositionForMinCost(float* v_cost, int numMPS) 
+int findPositionForMinCost(double* v_cost, int numMPS) 
 {
     int i = 0;
-    float minCost = v_cost[0];
+    double minCost = v_cost[0];
 
     for(int j = 1; j < numMPS; j++)
     {

@@ -6,19 +6,19 @@ typedef struct
     int calls;
     int moves;
     int cmp;
-    float cost;  
+    double cost;  
 } Stats;
 
 void initStats(Stats* count);
 
-float algCost(float a, float b, float c, Stats* count);
+double algCost(double a, double b, double c, Stats* count);
 
 int determineBreaks(int* v, int size);
 
-Stats saveStats(Stats s, float a, float b, float c);
+Stats saveStats(Stats s, double a, double b, double c);
 void printStats(Stats s, int mps, char* sort_alg);
 
-int findPositionForMinCost(float* v_cost, int numMPS);
+int findPositionForMinCost(double* v_cost, int numMPS);
 
 
 #endif

@@ -38,9 +38,9 @@ int calculateMinPartition(int* v, int size, int minCost, double a, double b, dou
     int minMPS = 2, maxMPS = size;
     int stepMPS = (maxMPS - minMPS) / 5;
     int numMPS;
-    float diffCost = DBL_MAX;
+    double diffCost = DBL_MAX;
     int mps[6]; 
-    float cost[6];
+    double cost[6];
     int* main_arr = (int*)malloc(size * sizeof(int));
     int* copy_main_arr = (int*)malloc(size * sizeof(int));
 
@@ -64,7 +64,8 @@ int calculateMinPartition(int* v, int size, int minCost, double a, double b, dou
 
             memcpy(copy_main_arr, main_arr, size * sizeof(int));
 
-            Stats s = {0};
+            Stats s;
+            initStats(&s);
 
             ordenadorUniversal(copy_main_arr, size, t, 0, &s);
             s.cost = algCost(a, b, c, &s);
@@ -77,6 +78,11 @@ int calculateMinPartition(int* v, int size, int minCost, double a, double b, dou
 
         adjustSearchRange(minPartitionSize, &minMPS, &maxMPS, &stepMPS, mps, numMPS);
         
+        // printf("\n\nCOST: ");
+        // for(int i = 0; i < 6; i++) {
+        //     printf("%f ", cost[i]);
+        // }
+        // printf("\n\n");
         diffCost = fabs(cost[0] - cost[numMPS - 1]);
         printf("nummps %d limParticao %d mpsdiff %.6f\n\n", numMPS, mps[minPartitionSize], diffCost);
 
@@ -90,15 +96,15 @@ int calculateMinPartition(int* v, int size, int minCost, double a, double b, dou
     return foundMinPartition;
 }
 
-int calculateMinBreaks(int* v, int size, float minCost, int minPartitionSize, double a, double b, double c, int seed)
+int calculateMinBreaks(int* v, int size, double minCost, int minPartitionSize, double a, double b, double c, int seed)
 {
     int minBreaks = 1;
     int maxBreaks = size / 2;
     int stepsBreaks = (maxBreaks - minBreaks) / 5;
     int numBreaks;
-    float diffCost = DBL_MAX;
+    double diffCost = DBL_MAX;
     int breaks[7];
-    float qsCost[7], inCost[7];
+    double qsCost[7], inCost[7];
     int* main_arr = (int*)malloc(size * sizeof(int));
     int* copy_main_arr = (int*)malloc(size * sizeof(int));
 
@@ -128,7 +134,9 @@ int calculateMinBreaks(int* v, int size, float minCost, int minPartitionSize, do
             srand48(seed);
             shuffleVector(copy_main_arr, size, t);
             
-            Stats qsStats = {0}, inStats = {0};
+            Stats qsStats, inStats;
+            initStats(&qsStats);
+            initStats(&inStats);
             
             quickSort(copy_main_arr, 0, size - 1, minPartitionSize, &qsStats);
             qsStats.cost = algCost(a, b, c, &qsStats);

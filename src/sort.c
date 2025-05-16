@@ -66,7 +66,6 @@ void quickSort(int* v, int l, int r, int minSize, Stats* count)
             if((j - l + 1) <= minSize)
             {
                 insertionSort(v, l, j, count);
-                return;
             } else
                 quickSort(v, l, j, minSize, count);
         }
@@ -74,7 +73,6 @@ void quickSort(int* v, int l, int r, int minSize, Stats* count)
             if((r - i + 1) <= minSize)
             {    
                 insertionSort(v, i, r, count);
-                return;
             } else
                 quickSort(v, i, r, minSize, count);
         }
