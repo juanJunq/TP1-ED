@@ -11,14 +11,14 @@ typedef struct
 
 void initStats(Stats* count);
 
-float algCost(int a, int b, int c, Stats* count);
+float algCost(float a, float b, float c, Stats* count);
 
 int determineBreaks(int* v, int size);
 
 Stats saveStats(Stats s, float a, float b, float c);
 void printStats(Stats s, int mps, char* sort_alg);
 
-int findPositionForMinCost(int* v_cost, int numMPS);
+int findPositionForMinCost(float* v_cost, int numMPS);
 
 
 #endif

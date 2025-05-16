@@ -1,0 +1,29 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "build",
+        "type": "shell",
+        "command": "gcc",
+        "args": [
+            "-Wall",
+            "-Wextra",
+            "-g3",
+            "-I${workspaceFolder}/include",
+            "${workspaceFolder}/src/main.c",
+            "${workspaceFolder}/src/calibration.c",
+            "${workspaceFolder}/src/stats.c",
+            "-o",
+            "${workspaceFolder}/bin/tp1.out",
+            "-lm"
+        ],
+        "group": {
+          "kind": "build",
+          "isDefault": true
+        },
+        "problemMatcher": ["$gcc"],
+        "detail": "Compilar o código C"
+      }
+    ]
+  }
+  

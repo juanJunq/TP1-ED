@@ -63,7 +63,7 @@ void quickSort(int* v, int l, int r, int minSize, Stats* count)
     if(l < r) {
         partition(v, l, r, &i, &j, count);
         if(j - l > 0) {
-            if(j - l <= minSize)
+            if((j - l + 1) <= minSize)
             {
                 insertionSort(v, l, j, count);
                 return;
@@ -71,7 +71,7 @@ void quickSort(int* v, int l, int r, int minSize, Stats* count)
                 quickSort(v, l, j, minSize, count);
         }
         if(r - i > 0) {
-            if(r - i <= minSize)
+            if((r - i + 1) <= minSize)
             {    
                 insertionSort(v, i, r, count);
                 return;
@@ -85,15 +85,7 @@ void ordenadorUniversal(int* v, int size, int minPartitionSize, int breakThresho
 {
     int numBreaks = determineBreaks(v, size);
     if(numBreaks < breakThreshold)
-    {
-        insertionSort(v, 0, size, count);
-    } else
-    {
-        if(size > minPartitionSize)
-        {
-            quickSort(v, 0, size, minPartitionSize, count);
-        } else {
-            insertionSort(v, 0, size, count);
-        }
-    }
+        insertionSort(v, 0, size - 1, count);
+    else
+        quickSort(v, 0, size - 1, minPartitionSize, count);
 }

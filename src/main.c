@@ -2,19 +2,20 @@
 #include <stdlib.h>
 #include <string.h>
 #include <float.h>
-#include "sort.h"
-#include "calibration.h"
+#include "../include/sort.h"
+#include "../include/calibration.h"
+#include "../include/stats.h"
 
 int main()
 {
     int seed, size;
-    double minCost, a, b, c;
+    float minCost, a, b, c;
 
     scanf("%d", &seed);
-    scanf("%lf", &minCost);
-    scanf("%lf", &a);
-    scanf("%lf", &b);
-    scanf("%lf", &c);
+    scanf("%f", &minCost);
+    scanf("%f", &a);
+    scanf("%f", &b);
+    scanf("%f", &c); 
     scanf("%d", &size);
 
     int* v = (int*)malloc(size * sizeof(int));
@@ -32,6 +33,7 @@ int main()
     int minBreaks = calculateMinBreaks(v, size, minCost, minPartitionSize, a, b, c, seed);
 
     free(v);
-    
+    int i;
+    scanf("%d", &i);
     return 0;
 }
