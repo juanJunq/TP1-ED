@@ -38,9 +38,9 @@ int calculateMinPartition(int* v, int size, int minCost, double a, double b, dou
     int minMPS = 2, maxMPS = size;
     int stepMPS = (maxMPS - minMPS) / 5;
     int numMPS;
-    double diffCost = DBL_MAX;
+    float diffCost = DBL_MAX;
     int mps[6]; 
-    double cost[6];
+    double cost[10];
     int* main_arr = (int*)malloc(size * sizeof(int));
     int* copy_main_arr = (int*)malloc(size * sizeof(int));
 
@@ -58,7 +58,7 @@ int calculateMinPartition(int* v, int size, int minCost, double a, double b, dou
         printf("iter %d\n\n", iter);
 
         numMPS = 0;
-        for(int t = minMPS; t <= maxMPS && numMPS < 6; t += stepMPS)
+        for(int t = minMPS; t <= maxMPS && numMPS < 10; t += stepMPS)
         {
             mps[numMPS] = t;
 
@@ -102,9 +102,9 @@ int calculateMinBreaks(int* v, int size, double minCost, int minPartitionSize, d
     int maxBreaks = size / 2;
     int stepsBreaks = (maxBreaks - minBreaks) / 5;
     int numBreaks;
-    double diffCost = DBL_MAX;
+    float diffCost = DBL_MAX;
     int breaks[7];
-    double qsCost[7], inCost[7];
+    double qsCost[10], inCost[10];
     int* main_arr = (int*)malloc(size * sizeof(int));
     int* copy_main_arr = (int*)malloc(size * sizeof(int));
 
@@ -124,7 +124,7 @@ int calculateMinBreaks(int* v, int size, double minCost, int minPartitionSize, d
         printf("iter %d\n\n", iter);
 
         numBreaks = 0;
-        for(int t = minBreaks; t <= maxBreaks && numBreaks < 7; t += stepsBreaks)
+        for(int t = minBreaks; t <= maxBreaks && numBreaks < 10; t += stepsBreaks)
         {
             breaks[numBreaks] = t;
 
