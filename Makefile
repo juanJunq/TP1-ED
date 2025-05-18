@@ -23,7 +23,7 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	$(CC) $(CFLAGS) -c $< -o $@
 
 clean:
-	rm -f $(OBJ_DIR)/*.o 
-	rm -f $(TARGET)
+	rm -rf $(OBJ_DIR) 
+	rm -rf $(BIN_DIR)
 
 .PHONY: all clean

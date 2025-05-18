@@ -37,12 +37,9 @@ int calculateMinPartition(int* v, int size, int minCost, double a, double b, dou
 {
     int minMPS = 2, maxMPS = size;
     int stepMPS = (maxMPS - minMPS) / 5;
-    int numMPS;
     mpsCost costMemory[100];
     int memoryCount = 0;
     float diffCost = DBL_MAX;
-    // int mps[6]; 
-    // double cost[10];
     int* main_arr = (int*)malloc(size * sizeof(int));
     int* copy_main_arr = (int*)malloc(size * sizeof(int));
 
@@ -61,7 +58,7 @@ int calculateMinPartition(int* v, int size, int minCost, double a, double b, dou
         double currentCost[6];
         int numMPS = 0;
 
-        printf("iter %d\n\n", iter);
+        printf("iter %d\n", iter);
         for(int t = minMPS; t <= maxMPS && numMPS < 10; t += stepMPS)
         {
             currentMPS[numMPS] = t;
@@ -145,7 +142,7 @@ int calculateMinPartition(int* v, int size, int minCost, double a, double b, dou
     return foundMinPartition;
 }
 
-int calculateMinBreaks(int* v, int size, double minCost, int minPartitionSize, double a, double b, double c, int seed)
+void calculateMinBreaks(int* v, int size, double minCost, int minPartitionSize, double a, double b, double c, int seed)
 {
     int minBreaks = 1;
     int maxBreaks = size / 2;
@@ -161,7 +158,7 @@ int calculateMinBreaks(int* v, int size, double minCost, int minPartitionSize, d
     if(main_arr == NULL || copy_main_arr == NULL || qs_array == NULL || in_array == NULL)
     {
         printf("Erro alocacao de memoria\n");
-        return -1;
+        return;
     }
 
     sortArray(v, size);
@@ -169,11 +166,11 @@ int calculateMinBreaks(int* v, int size, double minCost, int minPartitionSize, d
 
     int iter = 0;
     int previousMin = -1, previousMax = -1;
-    while((diffCost > minCost) && (maxBreaks != previousMax || (minBreaks != previousMin)))
+    while((diffCost > minCost) && (maxBreaks != previousMax || minBreaks != previousMin))
     {
         previousMin = minBreaks;
         previousMax = maxBreaks;
-        printf("iter %d\n\n", iter);
+        printf("iter %d\n", iter);
         
         int currentBreaks[7];
         double currentQSCost[7], currentInCost[7];
@@ -236,7 +233,7 @@ int calculateMinBreaks(int* v, int size, double minCost, int minPartitionSize, d
             if (currentBreaks[i] == maxBreaks) costMax = currentInCost[i];
         }
         
-        double lqdiff = fabs(costMax - costMin);
+        float lqdiff = fabs(costMax - costMin);
         diffCost = lqdiff;
         
         printf("numlq %d limQuebras %d lqdiff %.6f\n\n", numBreaks, bestBreaks, lqdiff);
@@ -257,6 +254,4 @@ int calculateMinBreaks(int* v, int size, double minCost, int minPartitionSize, d
     free(qs_array);
     free(main_arr);
     free(copy_main_arr);
-
-    return minBreaks;
 }

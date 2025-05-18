@@ -29,9 +29,10 @@ int main(int argc, char** argv)
     fclose(inputFile);
 
     int breaks = determineBreaks(v, size);
+    printf("size %d seed %d breaks %d\n\n", size, seed, breaks);
 
     int minPartitionSize = calculateMinPartition(v, size, minCost, a, b, c, seed);
-    int minBreaks = calculateMinBreaks(v, size, minCost, minPartitionSize, a, b, c, seed);
+    calculateMinBreaks(v, size, minCost, minPartitionSize, a, b, c, seed);
 
     free(v);
     return 0;
