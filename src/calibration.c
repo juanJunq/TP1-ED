@@ -38,9 +38,11 @@ int calculateMinPartition(int* v, int size, int minCost, double a, double b, dou
     int minMPS = 2, maxMPS = size;
     int stepMPS = (maxMPS - minMPS) / 5;
     int numMPS;
+    mpsCost costMemory[100];
+    int memoryCount = 0;
     float diffCost = DBL_MAX;
-    int mps[6]; 
-    double cost[10];
+    // int mps[6]; 
+    // double cost[10];
     int* main_arr = (int*)malloc(size * sizeof(int));
     int* copy_main_arr = (int*)malloc(size * sizeof(int));
 
@@ -55,44 +57,91 @@ int calculateMinPartition(int* v, int size, int minCost, double a, double b, dou
     int iter = 0;
     while((diffCost > minCost) && (maxMPS - minMPS >= 5)) 
     {
-        printf("iter %d\n\n", iter);
+        int currentMPS[6];
+        double currentCost[6];
+        int numMPS = 0;
 
-        numMPS = 0;
+        printf("iter %d\n\n", iter);
         for(int t = minMPS; t <= maxMPS && numMPS < 10; t += stepMPS)
         {
-            mps[numMPS] = t;
+            currentMPS[numMPS] = t;
 
             memcpy(copy_main_arr, main_arr, size * sizeof(int));
 
             Stats s;
             initStats(&s);
-
             ordenadorUniversal(copy_main_arr, size, t, 0, &s);
             s.cost = algCost(a, b, c, &s);
-            cost[numMPS] = s.cost;
+            currentCost[numMPS] = s.cost;
+
+            costMemory[memoryCount].mps = t;
+            costMemory[memoryCount].cost = s.cost;
+            memoryCount++;
+            
             printStats(s, t, "mps");
 
             numMPS++;
         }
-        int minPartitionSize = findPositionForMinCost(cost, numMPS);
-
-        adjustSearchRange(minPartitionSize, &minMPS, &maxMPS, &stepMPS, mps, numMPS);
+        int minPartitionSize = findPositionForMinCost(currentCost, numMPS);
+        int bestMPS = currentMPS[minPartitionSize];        
         
-        // printf("\n\nCOST: ");
-        // for(int i = 0; i < 6; i++) {
-        //     printf("%f ", cost[i]);
-        // }
-        // printf("\n\n");
-        diffCost = fabs(cost[0] - cost[numMPS - 1]);
-        printf("nummps %d limParticao %d mpsdiff %.6f\n\n", numMPS, mps[minPartitionSize], diffCost);
+        int newMinMPS, newMaxMPS;
+        if(minPartitionSize == 0)
+        {
+            newMinMPS = 0;
+            newMaxMPS = 2;
+        } else if(minPartitionSize == numMPS - 1)
+        {
+            newMinMPS = numMPS - 3;
+            newMaxMPS = numMPS - 1;
+        } else 
+        {
+            newMinMPS = minPartitionSize - 1;
+            newMaxMPS = minPartitionSize + 1;
+        }
+
+        newMinMPS = currentMPS[newMinMPS];
+        newMaxMPS = currentMPS[newMaxMPS];
+
+        double findMinCost = DBL_MAX, findMaxCost = -DBL_MAX;
+        for(int i = 0; i < memoryCount; i++)
+        {
+            if(costMemory[i].mps == newMinMPS || costMemory[i].mps == newMaxMPS)
+            {
+                if(costMemory[i].cost < findMinCost)
+                    findMinCost = costMemory[i].cost;
+                if(costMemory[i].cost > findMaxCost)
+                    findMaxCost = costMemory[i].cost;
+            }
+        }
+
+        diffCost = fabs(findMaxCost - findMinCost);
+
+        printf("nummps %d limParticao %d mpsdiff %.6f\n\n", numMPS, bestMPS, diffCost);
+
+        minMPS = newMinMPS;
+        maxMPS = newMaxMPS;
+        stepMPS = (maxMPS - minMPS) / 5;
+        if(stepMPS == 0)
+            stepMPS++;
 
         iter++;
     }
-    int foundMinPartition = mps[findPositionForMinCost(cost, numMPS)];
+    
+    int iForBestMPS = 0;
+    double minFinalCost = DBL_MAX;
+    for(int i = 0; i < memoryCount; i++)
+    {
+        if(costMemory[i].cost < minFinalCost)
+        {
+            minFinalCost = costMemory[i].cost;
+            iForBestMPS = i;
+        }
+    }
 
+    int foundMinPartition = costMemory[iForBestMPS].mps;
     free(main_arr);
     free(copy_main_arr);
-
     return foundMinPartition;
 }
 
@@ -102,69 +151,112 @@ int calculateMinBreaks(int* v, int size, double minCost, int minPartitionSize, d
     int maxBreaks = size / 2;
     int stepsBreaks = (maxBreaks - minBreaks) / 5;
     int numBreaks;
-    float diffCost = DBL_MAX;
-    int breaks[7];
-    double qsCost[10], inCost[10];
+    double diffCost = DBL_MAX;
+
     int* main_arr = (int*)malloc(size * sizeof(int));
     int* copy_main_arr = (int*)malloc(size * sizeof(int));
+    int* qs_array = (int*)malloc(size * sizeof(int));
+    int* in_array = (int*)malloc(size * sizeof(int));
 
-    if(main_arr == NULL || copy_main_arr == NULL)
+    if(main_arr == NULL || copy_main_arr == NULL || qs_array == NULL || in_array == NULL)
     {
         printf("Erro alocacao de memoria\n");
         return -1;
     }
 
     sortArray(v, size);
-
     memcpy(main_arr, v, size * sizeof(int));
 
     int iter = 0;
-    while((diffCost > minCost) && (maxBreaks - minBreaks >= 5))
+    int previousMin = -1, previousMax = -1;
+    while((diffCost > minCost) && (maxBreaks != previousMax || (minBreaks != previousMin)))
     {
+        previousMin = minBreaks;
+        previousMax = maxBreaks;
         printf("iter %d\n\n", iter);
-
+        
+        int currentBreaks[7];
+        double currentQSCost[7], currentInCost[7];
         numBreaks = 0;
-        for(int t = minBreaks; t <= maxBreaks && numBreaks < 10; t += stepsBreaks)
+        
+        for(int t = minBreaks; t <= maxBreaks && numBreaks < 7; t += stepsBreaks)
         {
-            breaks[numBreaks] = t;
-
-
+            currentBreaks[numBreaks] = t;
             memcpy(copy_main_arr, main_arr, size * sizeof(int));
 
             srand48(seed);
             shuffleVector(copy_main_arr, size, t);
             
+            memcpy(qs_array, copy_main_arr, size * sizeof(int));
+            memcpy(in_array, copy_main_arr, size * sizeof(int));
+
             Stats qsStats, inStats;
             initStats(&qsStats);
             initStats(&inStats);
             
-            quickSort(copy_main_arr, 0, size - 1, minPartitionSize, &qsStats);
+            quickSort(qs_array, 0, size - 1, minPartitionSize, &qsStats);
             qsStats.cost = algCost(a, b, c, &qsStats);
-            qsCost[numBreaks] = qsStats.cost;
-            printStats(qsStats, t, "qs lq");
+            currentQSCost[numBreaks] = qsStats.cost;
             
-            insertionSort(copy_main_arr, 0, size - 1, &inStats);
+            insertionSort(in_array, 0, size - 1, &inStats);
             inStats.cost = algCost(a, b, c, &inStats);
-            inCost[numBreaks] = inStats.cost;
+            currentInCost[numBreaks] = inStats.cost;
+            
+            printStats(qsStats, t, "qs lq");
             printStats(inStats, t, "in lq");
 
             numBreaks++;
         }
-        int bestBreakPos = findPositionForMinCost(inCost, numBreaks);
 
-        adjustSearchRange(bestBreakPos, &minBreaks, &maxBreaks, &stepsBreaks, breaks, numBreaks);
+        double minDiff = DBL_MAX;
+        int bestBreakPos = 0;
+        for (int i = 0; i < numBreaks; i++) {
+            double diff = fabs(currentInCost[i] - currentQSCost[i]);
+            if (diff < minDiff) {
+                minDiff = diff;
+                bestBreakPos = i;
+            }
+        }
 
-        diffCost = fabs(inCost[0] - inCost[numBreaks - 1]);
+        int bestBreaks = currentBreaks[bestBreakPos];
 
-        printf("numlq %d limQuebras %d lqdiff %.6f\n\n", numBreaks, breaks[bestBreakPos], diffCost);
+        if (bestBreakPos <= 1) {
+            minBreaks = currentBreaks[0];
+            maxBreaks = currentBreaks[2];
+        } else if (bestBreakPos >= numBreaks - 2) {
+            minBreaks = currentBreaks[numBreaks - 3];
+            maxBreaks = currentBreaks[numBreaks - 1];
+        } else {
+            minBreaks = currentBreaks[bestBreakPos - 1];
+            maxBreaks = currentBreaks[bestBreakPos + 1];
+        }
+        double costMin = -1, costMax = -1;
+        for (int i = 0; i < numBreaks; i++) {
+            if (currentBreaks[i] == minBreaks) costMin = currentInCost[i];
+            if (currentBreaks[i] == maxBreaks) costMax = currentInCost[i];
+        }
+        
+        double lqdiff = fabs(costMax - costMin);
+        diffCost = lqdiff;
+        
+        printf("numlq %d limQuebras %d lqdiff %.6f\n\n", numBreaks, bestBreaks, lqdiff);
+        
+        
+        // diffCost = fabs(maxInCost - minInCost);
+        // printf("numlq %d limQuebras %d lqdiff %.6f\n\n", numBreaks, bestBreaks, diffCost);
+
+        stepsBreaks = (maxBreaks - minBreaks) / 5;
+        if(stepsBreaks == 0)
+            stepsBreaks++;
 
         iter++;
+        //printf("diff %.6f > min %.6f\nmaxBreaks %d - minBreaks %d >= 5\n", diffCost, minCost, maxBreaks, minBreaks);        
     }
-    int foundPositionForMinCost = findPositionForMinCost(inCost, numBreaks);
-    int limBreaks = breaks[foundPositionForMinCost];
 
+    free(in_array);
+    free(qs_array);
     free(main_arr);
     free(copy_main_arr);
 
-    return limBreaks;
+    return minBreaks;
 }

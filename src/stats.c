@@ -6,6 +6,7 @@ void initStats(Stats* s)
     s->calls = 0;
     s->cmp = 0;
     s->moves = 0;
+    s->cost = 0.0;
 }
 
 double algCost(double a, double b, double c, Stats* count)
