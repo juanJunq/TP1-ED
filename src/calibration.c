@@ -166,17 +166,17 @@ void calculateMinBreaks(int* v, int size, double minCost, int minPartitionSize, 
 
     int iter = 0;
     int previousMin = -1, previousMax = -1;
-    while((diffCost > minCost) && (maxBreaks != previousMax || minBreaks != previousMin))
+    while(maxBreaks != previousMax || minBreaks != previousMin)
     {
         previousMin = minBreaks;
         previousMax = maxBreaks;
         printf("iter %d\n", iter);
         
-        int currentBreaks[7];
-        double currentQSCost[7], currentInCost[7];
+        int currentBreaks[10];
+        double currentQSCost[10], currentInCost[10];
         numBreaks = 0;
         
-        for(int t = minBreaks; t <= maxBreaks && numBreaks < 7; t += stepsBreaks)
+        for(int t = minBreaks; t <= maxBreaks && numBreaks < 10; t += stepsBreaks)
         {
             currentBreaks[numBreaks] = t;
             memcpy(copy_main_arr, main_arr, size * sizeof(int));
@@ -247,7 +247,10 @@ void calculateMinBreaks(int* v, int size, double minCost, int minPartitionSize, 
             stepsBreaks++;
 
         iter++;
-        //printf("diff %.6f > min %.6f\nmaxBreaks %d - minBreaks %d >= 5\n", diffCost, minCost, maxBreaks, minBreaks);        
+        if(diffCost <= minCost)
+            return;
+        //printf("diff %.6f > min %.6f\nmaxBreaks %d minBreaks %d previousMax %d previousMin %d\n\n", diffCost, minCost, maxBreaks, minBreaks, previousMax, previousMin);        
+        //printf("%d && (%d || %d) = %d\n\n", (diffCost > minCost), (maxBreaks != previousMax), (minBreaks != previousMin), ((diffCost > minCost) && ((maxBreaks != previousMax) || (minBreaks != previousMin))));
     }
 
     free(in_array);
