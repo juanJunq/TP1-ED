@@ -79,7 +79,7 @@ void quickSort(int* v, int l, int r, int minSize, Stats* count)
     }    
 }
 
-void ordenadorUniversal(int* v, int size, int minPartitionSize, int breakThreshold, Stats* count)
+void universalSorter(int* v, int size, int minPartitionSize, int breakThreshold, Stats* count)
 {
     int numBreaks = determineBreaks(v, size);
     if(numBreaks < breakThreshold)

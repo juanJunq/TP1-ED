@@ -67,7 +67,7 @@ int calculateMinPartition(int* v, int size, int minCost, double a, double b, dou
 
             Stats s;
             initStats(&s);
-            ordenadorUniversal(copy_main_arr, size, t, 0, &s);
+            universalSorter(copy_main_arr, size, t, 0, &s);
             s.cost = algCost(a, b, c, &s);
             currentCost[numMPS] = s.cost;
 
