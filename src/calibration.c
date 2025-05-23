@@ -25,7 +25,7 @@ int calculateMinPartition(int* v, int size, int minCost, double a, double b, dou
     int* copy_main_arr = malloc(size * sizeof(int));
 
     if(main_arr == NULL || copy_main_arr == NULL) {
-        printf("Erro alocacao de memoria\n");
+        printf("Error: Memory allocation failed\n");
         free(main_arr);
         free(copy_main_arr);
         return -1;
